@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Concept Pace Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><div class="wrap">
+<h1>Concept Pace Explorer</h1>
+<div class="card">
+<form method="post" action="/start">
+<label for="child"><b>Anonymous learner ID</b> (no real names, e.g. Child-01)</label>
+<input id="child" name="child" placeholder="Child-01" autofocus>
+<button type="submit">Start learning</button>
+</form></div>
+<a class="btn ghost" href="/dashboard">Teacher dashboard</a>
+</div></body></html>

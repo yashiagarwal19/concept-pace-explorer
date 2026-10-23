@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lesson</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><div class="wrap">
+<p class="tag">Learner: {{ child }}</p>
+<div class="card">
+  {% if fmt == 'picture' %}<div class="big">{{ item.picture }}</div>
+  {% elif fmt == 'audio' %}<button onclick="speak({{ item.audio|tojson }})">🔊 Listen</button>
+  {% else %}<p class="story">{{ item.story }}</p>{% endif %}
+</div>
+<h2>{{ item.question }}</h2>
+<div class="opts">{% for o in item.options %}<button class="opt" data-v="{{ o }}">{{ o }}</button>{% endfor %}</div>
+<button class="ghost" id="hintBtn">💡 Hint</button>
+<p id="hint" hidden>{{ item.hint }}</p>
+<h2 id="result"></h2>
+<a class="btn" id="next" href="" hidden>Next ➜</a>
+</div>
+<script>
+const start = Date.now(); let hints = 0, answered = false;
+function speak(t){ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.rate = 0.85; speechSynthesis.speak(u); }
+document.getElementById('hintBtn').onclick = () => { hints++; document.getElementById('hint').hidden = false; };
+document.querySelectorAll('.opt').forEach(b => b.onclick = async () => {
+  if (answered) return; answered = true;
+  const correct = b.dataset.v === {{ item.answer|tojson }};
+  await fetch('/api/log', {method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({child: {{ child|tojson }}, fmt: {{ fmt|tojson }}, concept: {{ item.concept|tojson }},
+      correct: correct, response_ms: Date.now() - start, hints: hints})});
+  document.getElementById('result').textContent = correct ? '✅ Well done!' : '❌ Not quite. The answer is {{ item.answer }}.';
+  const n = document.getElementById('next'); n.hidden = false; n.href = location.href;
+});
+</script></body></html>
