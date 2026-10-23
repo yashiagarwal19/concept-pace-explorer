@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teacher Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><div class="wrap">
+<h1>Teacher Dashboard</h1>
+{% for d in data %}
+<div class="card"><h2>{{ d.child }}</h2><p>{{ d.summary }}</p>
+<table><tr><th>Format</th><th>Answers</th><th>Correct</th><th>Avg time</th><th>Score</th></tr>
+{% for r in d.rows %}<tr><td>{{ r.fmt }}</td><td>{{ r.n }}</td><td>{{ '%.0f'|format(r.accuracy) }}%</td><td>{{ '%.1f'|format(r.avg_ms/1000) }}s</td><td>{{ '%.2f'|format(r.avg_reward) }}</td></tr>{% endfor %}
+</table></div>
+{% else %}<p>No learner data yet. Complete a lesson first.</p>{% endfor %}
+<a class="btn ghost" href="/">Back</a>
+</div></body></html>
